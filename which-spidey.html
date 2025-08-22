@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Spider-Man Are You?</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1e1e2f, #2c003e);
+    background-image:
+        repeating-linear-gradient(to right, #2d2a44 0 1px, transparent 2px 200px),
+        repeating-linear-gradient(to bottom, #2d2a44 0 1px, transparent 2px 200px),
+        radial-gradient(at 50% 50%, #2d2a44, #1d1b34);
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  #congratsMsg {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 15px;
+  text-shadow: 0 0 10px #000;
+}
+
+
+  header h1 {
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    margin: 10px;
+    background: linear-gradient(90deg, #395ca0, #d78995, #efefea);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+  }
+
+  #quizArea {
+    max-width: 700px;
+    margin: 30px auto;
+    background: rgba(20, 20, 40, 0.85);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    transition: transform 0.3s ease;
+  }
+
+  #quizArea:hover {
+    transform: scale(1.02);
+  }
+
+  button {
+    background: linear-gradient(135deg, #ff0055, #ff7f50);
+    border: none;
+    padding: 14px 25px;
+    font-family: 'Poppins';
+    margin: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  button:hover {
+    transform: scale(1.05) rotate(-1deg);
+    box-shadow: 0 0 20px rgba(255, 0, 80, 0.6);
+  }
+
+  #finalResult {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 40px auto;
+    padding: 20px;
+    max-width: 700px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(255,255,255,0.2);
+    text-align: center;
+  }
+
+  #resultText {
+    font-size: 2em;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 15px #ff0055, 0 0 20px #ff7f50;
+    margin-bottom: 20px;
+  }
+
+  #spideyImg {
+    width: 200px;
+    aspect-ratio: 2/3;
+    border-radius: 12px;
+    box-shadow: 0 0 25px #ff0055;
+  }
+</style>
+</head>
+<body>
+<header>
+<h1>Which Spider-Man Are You? 🕷️</h1>
+</header>
+<div id="quizArea">
+  <p id="question"></p>
+  <div id="options"></div>
+  <button id="nextBtn" onclick="nextQuestion()" style="display:none;">Next</button>
+  <div id="congratsMsg" style="display:none;">Congratulations!!</div>
+
+</div>
+
+<!-- Congrats message under quizArea -->
+
+<div id="finalResult">
+  <div id="resultText"></div>
+  <img id="spideyImg" src="" alt="">
+</div>
+
+
+<script>
+const questions = [
+  {
+    q: "What's your personality?",
+    options: [
+      {text: "Smart and responsible", type: "Tobey"},
+      {text: "Cool and witty", type: "Andrew"},
+      {text: "Funny and heroic", type: "Tom"},
+    ]
+  },
+  {
+    q: "Pick a favorite color:",
+    options: [
+      {text: "Red & Blue", type: "Tobey"},
+      {text: "Dark red & Blue", type: "Andrew"},
+      {text: "Red & Black", type: "Tom"},
+    ]
+  },
+  {
+    q: "Your approach to fighting villains:",
+    options: [
+      {text: "Serious and strategic", type: "Tobey"},
+      {text: "Fast and edgy", type: "Andrew"},
+      {text: "Teamwork and witty quips", type: "Tom"},
+    ]
+  },
+  {
+    q: "Favorite Spider-Gadget?",
+    options: [
+      {text: "Classic web shooters", type: "Tobey"},
+      {text: "Mechanical web shooters", type: "Andrew"},
+      {text: "Advanced tech suit", type: "Tom"},
+    ]
+  },
+  {
+    q: "Your ideal day off:",
+    options: [
+      {text: "Quiet at home, reading", type: "Tobey"},
+      {text: "Hanging out at the city", type: "Andrew"},
+      {text: "Hanging with friends and school", type: "Tom"},
+    ]
+  }
+];
+
+const results = {
+  "Tobey": {name: "Tobey Maguire Spider-Man", img: "https://i.ibb.co/wFRzf7Vx/spider-man-no-way-home-peter-2-png-by-aryan190516-dfoimv2-414w-2x.png"},
+  "Andrew": {name: "Andrew Garfield Spider-Man", img: "https://i.ibb.co/35LQZm1Z/spider-man-no-way-home-peter-3-png-by-aryan190516-dfgpdqc-414w-2x.png"},
+  "Tom": {name: "Tom Holland Spider-Man", img: "https://i.ibb.co/ZjB5jDV/spider-man-brand-new-day-new-suit-png-by-aryan190516-dk9mmq4-414w-2x.png"}
+};
+
+let score = {Tobey:0, Andrew:0, Tom:0};
+let current = 0;
+
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("nextBtn");
+const resultEl = document.getElementById("resultText");
+const spideyImg = document.getElementById("spideyImg");
+const finalResultDiv = document.getElementById("finalResult");
+
+function loadQuestion() {
+  const q = questions[current];
+  questionEl.textContent = q.q;
+  optionsEl.innerHTML = '';
+  nextBtn.style.display = 'none';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.textContent = opt.text;
+    btn.onclick = () => selectAnswer(opt.type);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(type) {
+  score[type]++;
+  Array.from(optionsEl.children).forEach(btn => btn.disabled = true);
+  nextBtn.style.display = 'inline-block';
+}
+
+function nextQuestion() {
+  current++;
+  if(current >= questions.length) {
+    showResult();
+  } else {
+    loadQuestion();
+  }
+}function showResult() {
+  const winner = Object.keys(score).reduce((a,b) => score[a] > score[b] ? a : b);
+
+  // Show congrats message under quiz
+  const congratsDiv = document.getElementById("congratsMsg");
+  congratsDiv.style.display = "block";
+
+  // Show final result
+  finalResultDiv.style.display = "flex";
+  resultEl.textContent = `You are: ${results[winner].name}`;
+  spideyImg.src = results[winner].img;
+
+  // Hide quiz buttons and question
+  optionsEl.style.display = 'none';
+  nextBtn.style.display = 'none';
+  questionEl.style.display = 'none';  // <-- hide the question text
+}
+
+
+// Load first question
+loadQuestion();
+</script>
+</body>
+</html>

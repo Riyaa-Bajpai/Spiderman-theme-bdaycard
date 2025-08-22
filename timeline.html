@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spider-Man Timeline</title>
+
+  <!-- Poppins to match your main site -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --sp-red:#e11d48;
+      --sp-blue:#1e3a8a;
+      --sp-dark:#0b0b1a;
+      --card:#131a33;
+      --line:#e11d48;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+
+    body{
+      margin:0;
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:#eee;
+
+      /* match your gridy cosmic background */
+      background-image:
+        repeating-linear-gradient(to right, #2d2a44 0 1px, transparent 2px 200px),
+        repeating-linear-gradient(to bottom, #2d2a44 0 1px, transparent 2px 200px),
+        radial-gradient(at 50% 50%, #2d2a44, #1d1b34);
+    }
+
+    header{
+      max-width:min(1200px,92vw);
+      margin:20px auto 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    header h1{
+      font-weight:800;
+      letter-spacing:.5px;
+      margin:0;
+      background:linear-gradient(90deg,#89a5df,#e46e7f,#e8e191);
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+      text-transform:uppercase;
+      text-shadow:0 0 10px rgba(233,77,106,.15);
+    }
+    .back{
+      text-decoration:none;
+      color:#fff;
+      border:1px solid #ffffff33;
+      padding:10px 16px;
+      border-radius:999px;
+      background-image:linear-gradient(to bottom, #eee1, transparent, #eee1);
+      transition:.25s ease;
+    }
+    .back:hover{
+      background:#c691e6;
+      color:#040018;
+      box-shadow:0 0 30px #c691e6;
+    }
+
+    /* Timeline */
+    .timeline{
+      position:relative;
+      max-width:min(1100px,92vw);
+      margin:40px auto 80px;
+      padding:20px 0;
+    }
+    .timeline::after{
+      content:"";
+      position:absolute;
+      top:0; bottom:0;
+      left:50%;
+      width:4px;
+      transform:translateX(-50%);
+      background:linear-gradient(#e11d48,#8b5cf6,#22d3ee);
+      border-radius:4px;
+      box-shadow:0 0 16px rgba(225,29,72,.5);
+    }
+
+    .event{
+      position:relative;
+      width:50%;
+      padding:20px 28px;
+    }
+    .event.left  { left:0;   }
+    .event.right { left:50%; }
+
+    .dot{
+      position:absolute;
+      top:32px;
+      width:16px;height:16px;border-radius:50%;
+      background:var(--line);
+      box-shadow:0 0 18px rgba(225,29,72,.8), 0 0 4px #fff inset;
+      z-index:1;
+    }
+    .event.left  .dot{ right:-8px; }
+    .event.right .dot{ left:-8px;  }
+
+    .card{
+      display:grid;
+      grid-template-columns: 180px 1fr;
+      gap:18px;
+      align-items:stretch;
+      background:rgba(19,26,51,.85);
+      border:1px solid #ffffff1f;
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 12px 40px rgba(0,0,0,.35);
+      backdrop-filter: blur(6px);
+      transition:transform .25s ease, box-shadow .25s ease;
+    }
+    .card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 18px 50px rgba(0,0,0,.5);
+    }
+
+    /* Poster keeps aspect ratio; never distorted */
+    .poster{
+      border-radius:12px;
+      overflow:hidden;
+      aspect-ratio:2/3;
+      background:#0f172a;
+      box-shadow:0 0 0 1px #ffffff14 inset, 0 8px 24px rgba(0,0,0,.35);
+    }
+    .poster img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;         /* fills card without distortion */
+      object-position:center;
+    }
+    .poster a{
+      display:block;
+      width:100%; height:100%;
+    }
+
+    .meta h3{
+      margin:0 0 6px;
+      font-weight:700;
+      color:#fff;
+      letter-spacing:.2px;
+    }
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:8px 0 10px;
+    }
+    .chip{
+      font-size:.78rem;
+      border:1px solid #ffffff2a;
+      padding:.25rem .6rem;
+      border-radius:999px;
+      background:linear-gradient(180deg,#182039,#0e1326);
+      box-shadow:0 0 0 1px #000 inset;
+      color:#cbd5e1;
+    }
+    .desc{
+      margin:0;
+      color:#cbd5e1;
+      line-height:1.55;
+      font-size:.95rem;
+    }
+
+    /* Responsive: stack vertically */
+    @media (max-width: 860px){
+      .timeline::after{ left:24px; }
+      .event{ left:0 !important; width:100%; padding-left:58px; }
+      .event .dot{ left:16px !important; right:auto; }
+      .card{ grid-template-columns: 120px 1fr; }
+    }
+
+    /* Lightbox */
+    .lightbox{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.85);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+    .lightbox.open{ display:flex; }
+    .lightbox img{
+      max-width:min(85vw,700px);
+      max-height:85vh;
+      border-radius:12px;
+      box-shadow:0 16px 60px rgba(0,0,0,.7);
+    }
+    .close{
+      position:fixed;
+      top:22px; right:26px;
+      background:#e11d48;
+      color:#fff;
+      border:none; border-radius:999px;
+      padding:10px 16px; cursor:pointer;
+      font-weight:600;
+      box-shadow:0 10px 30px rgba(225,29,72,.5);
+    }
+    .close:hover{ filter:brightness(1.1); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Spider-Man Timeline</h1>
+    <a class="back" href="index.html">⬅ Back to Home</a>
+  </header>
+
+  <section class="timeline" id="timeline"></section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="close" id="closeLb">Close ✕</button>
+    <img id="lightboxImg" alt="Poster"/>
+  </div>
+
+  <script>
+    // ====== Data (add real poster files into /assets/posters/ to replace fallbacks) ======
+    const movies = [
+  // Sam Raimi Spider-Man Trilogy
+  { title: "Spider-Man", year: 2002, release: "May 3, 2002", cast: "Tobey Maguire, Kirsten Dunst, Willem Dafoe", poster: "spiderman1.webp", blurb: "Peter Parker’s origin and first clash with the Green Goblin." },
+  { title: "Spider-Man 2", year: 2004, release: "June 30, 2004", cast: "Tobey Maguire, Alfred Molina, Kirsten Dunst", poster: "spiderman2.jpg", blurb: "Peter vs. Doctor Octopus in a beloved classic." },
+  { title: "Spider-Man 3", year: 2007, release: "May 4, 2007", cast: "Tobey Maguire, Topher Grace, Thomas Haden Church", poster: "spiderman3.webp", blurb: "The symbiote saga with Venom and Sandman." },
+
+  // The Amazing Spider-Man Series
+  { title: "The Amazing Spider-Man", year: 2012, release: "July 3, 2012", cast: "Andrew Garfield, Emma Stone, Rhys Ifans", poster: "amazing1.jpg", blurb: "A new origin; battle with the Lizard." },
+  { title: "The Amazing Spider-Man 2", year: 2014, release: "May 2, 2014", cast: "Andrew Garfield, Emma Stone, Jamie Foxx", poster: "amazing2.jpeg", blurb: "Electro, Goblin, and a fateful turning point." },
+
+  // MCU Spider-Man timeline
+  { title: "Captain America: Civil War", year: 2016, release: "May 6, 2016", cast: "Tom Holland, Robert Downey Jr., Chris Evans", poster: "civilwar.webp", blurb: "Spider-Man is introduced into the MCU; first team-up." },
+  { title: "Spider-Man: Homecoming", year: 2017, release: "July 7, 2017", cast: "Tom Holland, Michael Keaton, Zendaya", poster: "homecoming.webp", blurb: "Balancing high school and hero life against Vulture." },
+  { title: "Avengers: Infinity War", year: 2018, release: "Apr 27, 2018", cast: "Tom Holland, Robert Downey Jr., Josh Brolin", poster: "infinity.webp", blurb: "Spider-Man teams with the Avengers to stop Thanos." },
+  { title: "Avengers: Endgame", year: 2019, release: "Apr 26, 2019", cast: "Tom Holland, Robert Downey Jr., Chris Evans", poster: "endgame.webp", blurb: "After Thanos’ snap, heroes try to restore the universe." },
+  { title: "Spider-Man: Far From Home", year: 2019, release: "July 2, 2019", cast: "Tom Holland, Jake Gyllenhaal, Zendaya", poster: "farfromhome.webp", blurb: "A European trip derailed by Mysterio." },
+  { title: "Spider-Man: No Way Home", year: 2021, release: "Dec 17, 2021", cast: "Tom Holland, Zendaya, Tobey Maguire, Andrew Garfield", poster: "nowayhome.jpg", blurb: "The multiverse blows open—three Spider-Men unite." },
+
+  // Spider-Verse Animated
+  { title: "Spider-Man: Into the Spider-Verse", year: 2018, release: "Dec 14, 2018", cast: "Shameik Moore, Hailee Steinfeld, Jake Johnson", poster: "intospiderverse.webp", blurb: "Miles Morales becomes Spider-Man across dimensions." },
+  { title: "Spider-Man: Across the Spider-Verse", year: 2023, release: "June 2, 2023", cast: "Shameik Moore, Hailee Steinfeld, Oscar Isaac", poster: "acrossspiderverse.jpeg", blurb: "A deeper dive into the Spider-Society." },
+  { title: "Spider-Man: Beyond the Spider-Verse", year: 2027, release: "TBA", cast: "Miles & friends", poster: "beyondspiderverse.jpg", blurb: "The saga continues (TBA)." },
+
+  // Sony Spider-Man Universe Spin-offs
+  { title: "Venom", year: 2018, release: "Oct 5, 2018", cast: "Tom Hardy, Michelle Williams", poster: "venom.webp", blurb: "Eddie Brock becomes Venom in this antihero story." },
+  { title: "Venom: Let There Be Carnage", year: 2021, release: "Oct 1, 2021", cast: "Tom Hardy, Woody Harrelson", poster: "venomcarnage.webp", blurb: "Venom faces his deadliest adversary, Carnage." },
+  {title: "Venom: The Last Dance",year: 2024,release: "Oct 25, 2024",cast: "Tom Hardy, Chiwetel Ejiofor",poster: "lastdance.jpg",blurb: "Eddie Brock and Venom face new threats from mysterious aliens and government forces, testing their partnership like never before."
+}
+];
+
+
+    // ====== Helpers ======
+    // Creates a crisp SVG fallback (no distortion) if poster file is missing
+    function fallbackPosterDataURI(title, year){
+      const w = 600, h = 900; // 2:3
+      const bg = encodeURIComponent("#0f172a");
+      const grad1 = encodeURIComponent("#e11d48");
+      const grad2 = encodeURIComponent("#1e3a8a");
+      const text = encodeURIComponent(`${title} ${year?`(${year})`:""}`);
+
+      const svg = `
+      <svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}'>
+        <defs>
+          <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+            <stop offset='0%' stop-color='${grad1}' stop-opacity='.35'/>
+            <stop offset='100%' stop-color='${grad2}' stop-opacity='.35'/>
+          </linearGradient>
+        </defs>
+        <rect width='100%' height='100%' fill='${bg}'/>
+        <rect x='0' y='0' width='100%' height='100%' fill='url(#g)'/>
+        <text x='50%' y='50%' fill='#fff' font-family='Poppins, Arial' font-size='36' font-weight='700' text-anchor='middle'>
+          ${text}
+        </text>
+        <text x='50%' y='58%' fill='#cbd5e1' font-family='Poppins, Arial' font-size='18' text-anchor='middle'>
+          Poster placeholder
+        </text>
+        <circle cx='60' cy='60' r='24' fill='${grad1}'/>
+        <circle cx='540' cy='840' r='18' fill='${grad2}'/>
+      </svg>`.trim();
+
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+
+    // ====== Render ======
+    const root = document.getElementById('timeline');
+
+    movies.forEach((m, i) => {
+      const side = i % 2 === 0 ? 'left' : 'right';
+
+      // container
+      const wrap = document.createElement('div');
+      wrap.className = `event ${side}`;
+
+      // dot
+      const dot = document.createElement('span');
+      dot.className = 'dot';
+      wrap.appendChild(dot);
+
+      // card
+      const card = document.createElement('article');
+      card.className = 'card';
+
+      // poster (clickable)
+      const posterBox = document.createElement('div');
+      posterBox.className = 'poster';
+      const link = document.createElement('a');
+      link.href = `assets/posters/${m.poster}`;     // full-size link
+      link.dataset.title = `${m.title} (${m.year || 'TBA'})`;
+      const img = document.createElement('img');
+      img.alt = `${m.title} poster`;
+
+      // load poster, or fallback if missing
+      img.src = `assets/posters/${m.poster}`;
+      img.onerror = () => {
+        const fallback = fallbackPosterDataURI(m.title, m.year);
+        img.src = fallback;
+        link.href = fallback; // still open lightbox with fallback
+      };
+
+      link.appendChild(img);
+      posterBox.appendChild(link);
+
+      // meta
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.innerHTML = `
+        <h3>${m.title} ${m.year ? `<span style="opacity:.8;font-weight:600">(${m.year})</span>` : ""}</h3>
+        <div class="chips">
+          <span class="chip">Release: ${m.release}</span>
+          <span class="chip">${m.cast}</span>
+        </div>
+        <p class="desc">${m.blurb}</p>
+      `;
+
+      card.appendChild(posterBox);
+      card.appendChild(meta);
+      wrap.appendChild(card);
+      root.appendChild(wrap);
+    });
+
+    // ====== Lightbox (proper poster link behavior without leaving page) ======
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightboxImg');
+    const closeLb = document.getElementById('closeLb');
+
+    root.addEventListener('click', (e)=>{
+      const a = e.target.closest('.poster a');
+      if(!a) return;
+      e.preventDefault();
+      lbImg.src = a.href;
+      lb.classList.add('open');
+    });
+    closeLb.addEventListener('click', ()=> lb.classList.remove('open'));
+    lb.addEventListener('click', (e)=> { if(e.target === lb) lb.classList.remove('open'); });
+    window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') lb.classList.remove('open'); });
+  </script>
+</body>
+</html>

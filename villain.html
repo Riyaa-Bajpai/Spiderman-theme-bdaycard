@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Catch the Villain</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #2c003e);
+      background-image:
+        repeating-linear-gradient(to right, #2d2a44 0 1px, transparent 2px 200px),
+        repeating-linear-gradient(to bottom, #2d2a44 0 1px, transparent 2px 200px),
+        radial-gradient(at 50% 50%, #2d2a44, #1d1b34);
+   
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+   header h1 {
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin: 10px;
+  background: linear-gradient(90deg, #395ca0, #d78995, #efefea);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+
+  text-shadow: 
+    0 0 2px rgba(255, 255, 255, 0.4),
+    0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+    p {
+      font-size: 18px;
+    }
+
+    #gameArea {
+      position: relative;
+      width: 700px;
+      height: 450px;
+      border: 3px solid #fff;
+      margin: 20px auto;
+      background: url('https://i.ibb.co/fYkzFDB0/48aba6be6e62353524ebaf141b61e07d.png') no-repeat center center/cover;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .villain {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  border-radius: 0; /* remove circle look */
+  background-color: transparent !important; /* ensures no white fill */
+}
+
+    .villain:hover {
+      transform: scale(1.2) rotate(5deg);
+    }
+
+    #score {
+      font-size: 22px;
+      margin: 15px;
+      font-weight: bold;
+    }
+
+    button {
+      background: #ff4d4d;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #ff1a1a;
+      box-shadow: 0 0 10px red;
+    }
+  </style>
+</head>
+<body>
+  <header>
+  <h1>Catch the Villain 🦹‍♂️</h1>
+  </header>
+  <p>Click on the villain as fast as you can!</p>
+  <div id="gameArea"></div>
+  <p id="score">Score: 0</p>
+  <button onclick="location.href='index.html'">⬅ Back</button>
+
+  <script>
+    const gameArea = document.getElementById("gameArea");
+    const scoreDisplay = document.getElementById("score");
+    let score = 0;
+
+    // Just image URLs (no <a> or <img> tags)
+    const villains = [
+      "https://i.ibb.co/zWx7m94g/otto-octavius-doctor-octopus-nwh-png-by-iwasboredsoididthis-deprn31-pre.png",
+      "https://i.ibb.co/4RG9Y0Rj/spider-man-4-lizard-transparent-by-bearbro123-dfc64oa-fullview.png", // Lizard
+      "https://i.ibb.co/prZyh50r/spider-man-green-goblin-png-willem-dafoe-by-vegpngs-df0zxa5-pre.png", // Green Goblin
+    "https://i.ibb.co/xSfSCymz/Venom-5.png"    ];
+
+    function spawnVillain() {
+      const villain = document.createElement("img");
+      villain.className = "villain";
+      villain.src = villains[Math.floor(Math.random() * villains.length)];
+      villain.style.top = Math.random() * (gameArea.clientHeight - 70) + "px";
+      villain.style.left = Math.random() * (gameArea.clientWidth - 70) + "px";
+
+      villain.onclick = () => {
+        score++;
+        scoreDisplay.textContent = "Score: " + score;
+        villain.remove();
+      };
+
+      gameArea.appendChild(villain);
+      setTimeout(() => villain.remove(), 1500);
+    }
+
+    setInterval(spawnVillain, 2000);
+  </script>
+</body>
+</html>
