@@ -223,35 +223,24 @@
   </div>
 
   <script>
-    // ====== Data (add real poster files into /assets/posters/ to replace fallbacks) ======
     const movies = [
-  // Sam Raimi Spider-Man Trilogy
   { title: "Spider-Man", year: 2002, release: "May 3, 2002", cast: "Tobey Maguire, Kirsten Dunst, Willem Dafoe", poster: "spiderman1.webp", blurb: "Peter Parker’s origin and first clash with the Green Goblin." },
   { title: "Spider-Man 2", year: 2004, release: "June 30, 2004", cast: "Tobey Maguire, Alfred Molina, Kirsten Dunst", poster: "spiderman2.jpg", blurb: "Peter vs. Doctor Octopus in a beloved classic." },
   { title: "Spider-Man 3", year: 2007, release: "May 4, 2007", cast: "Tobey Maguire, Topher Grace, Thomas Haden Church", poster: "spiderman3.webp", blurb: "The symbiote saga with Venom and Sandman." },
-
-  // The Amazing Spider-Man Series
   { title: "The Amazing Spider-Man", year: 2012, release: "July 3, 2012", cast: "Andrew Garfield, Emma Stone, Rhys Ifans", poster: "amazing1.jpg", blurb: "A new origin; battle with the Lizard." },
   { title: "The Amazing Spider-Man 2", year: 2014, release: "May 2, 2014", cast: "Andrew Garfield, Emma Stone, Jamie Foxx", poster: "amazing2.jpeg", blurb: "Electro, Goblin, and a fateful turning point." },
-
-  // MCU Spider-Man timeline
   { title: "Captain America: Civil War", year: 2016, release: "May 6, 2016", cast: "Tom Holland, Robert Downey Jr., Chris Evans", poster: "civilwar.webp", blurb: "Spider-Man is introduced into the MCU; first team-up." },
   { title: "Spider-Man: Homecoming", year: 2017, release: "July 7, 2017", cast: "Tom Holland, Michael Keaton, Zendaya", poster: "homecoming.webp", blurb: "Balancing high school and hero life against Vulture." },
   { title: "Avengers: Infinity War", year: 2018, release: "Apr 27, 2018", cast: "Tom Holland, Robert Downey Jr., Josh Brolin", poster: "infinity.webp", blurb: "Spider-Man teams with the Avengers to stop Thanos." },
+  { title: "Venom", year: 2018, release: "Oct 5, 2018", cast: "Tom Hardy, Michelle Williams", poster: "venom.webp", blurb: "Eddie Brock becomes Venom in this antihero story." },
+  { title: "Spider-Man: Into the Spider-Verse", year: 2018, release: "Dec 14, 2018", cast: "Shameik Moore, Hailee Steinfeld, Jake Johnson", poster: "intospiderverse.webp", blurb: "Miles Morales becomes Spider-Man across dimensions." },
   { title: "Avengers: Endgame", year: 2019, release: "Apr 26, 2019", cast: "Tom Holland, Robert Downey Jr., Chris Evans", poster: "endgame.webp", blurb: "After Thanos’ snap, heroes try to restore the universe." },
   { title: "Spider-Man: Far From Home", year: 2019, release: "July 2, 2019", cast: "Tom Holland, Jake Gyllenhaal, Zendaya", poster: "farfromhome.webp", blurb: "A European trip derailed by Mysterio." },
-  { title: "Spider-Man: No Way Home", year: 2021, release: "Dec 17, 2021", cast: "Tom Holland, Zendaya, Tobey Maguire, Andrew Garfield", poster: "nowayhome.jpg", blurb: "The multiverse blows open—three Spider-Men unite." },
-
-  // Spider-Verse Animated
-  { title: "Spider-Man: Into the Spider-Verse", year: 2018, release: "Dec 14, 2018", cast: "Shameik Moore, Hailee Steinfeld, Jake Johnson", poster: "intospiderverse.webp", blurb: "Miles Morales becomes Spider-Man across dimensions." },
-  { title: "Spider-Man: Across the Spider-Verse", year: 2023, release: "June 2, 2023", cast: "Shameik Moore, Hailee Steinfeld, Oscar Isaac", poster: "acrossspiderverse.jpeg", blurb: "A deeper dive into the Spider-Society." },
-  { title: "Spider-Man: Beyond the Spider-Verse", year: 2027, release: "TBA", cast: "Miles & friends", poster: "beyondspiderverse.jpg", blurb: "The saga continues (TBA)." },
-
-  // Sony Spider-Man Universe Spin-offs
-  { title: "Venom", year: 2018, release: "Oct 5, 2018", cast: "Tom Hardy, Michelle Williams", poster: "venom.webp", blurb: "Eddie Brock becomes Venom in this antihero story." },
   { title: "Venom: Let There Be Carnage", year: 2021, release: "Oct 1, 2021", cast: "Tom Hardy, Woody Harrelson", poster: "venomcarnage.webp", blurb: "Venom faces his deadliest adversary, Carnage." },
-  {title: "Venom: The Last Dance",year: 2024,release: "Oct 25, 2024",cast: "Tom Hardy, Chiwetel Ejiofor",poster: "lastdance.jpg",blurb: "Eddie Brock and Venom face new threats from mysterious aliens and government forces, testing their partnership like never before."
-}
+  { title: "Spider-Man: No Way Home", year: 2021, release: "Dec 17, 2021", cast: "Tom Holland, Zendaya, Tobey Maguire, Andrew Garfield", poster: "nowayhome.jpg", blurb: "The multiverse blows open—three Spider-Men unite." },
+  { title: "Spider-Man: Across the Spider-Verse", year: 2023, release: "June 2, 2023", cast: "Shameik Moore, Hailee Steinfeld, Oscar Isaac", poster: "acrossspiderverse.jpeg", blurb: "A deeper dive into the Spider-Society." },
+  {title: "Venom: The Last Dance",year: 2024,release: "Oct 25, 2024",cast: "Tom Hardy, Chiwetel Ejiofor",poster: "lastdance.jpg",blurb: "Eddie Brock and Venom face new threats from mysterious aliens and government forces, testing their partnership like never before."},
+  { title: "Spider-Man: Beyond the Spider-Verse", year: 2027, release: "TBA", cast: "Miles & friends", poster: "beyondspiderverse.jpg", blurb: "The saga continues (TBA)." },
 ];
 
 
