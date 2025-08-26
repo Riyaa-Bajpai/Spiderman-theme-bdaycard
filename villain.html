@@ -27,10 +27,6 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   text-transform: uppercase;
-
-  text-shadow: 
-    0 0 2px rgba(255, 255, 255, 0.4),
-    0 0 2px rgba(255, 255, 255, 0.3);
 }
 
     p {
@@ -90,7 +86,7 @@
 </head>
 <body>
   <header>
-  <h1>Catch the Villain 🦹‍♂️</h1>
+  <h1>Catch the Super Villain 🦹‍♂️</h1>
   </header>
   <p>Click on the villain as fast as you can!</p>
   <div id="gameArea"></div>
@@ -98,35 +94,51 @@
   <button onclick="location.href='index.html'">⬅ Back</button>
 
   <script>
-    const gameArea = document.getElementById("gameArea");
-    const scoreDisplay = document.getElementById("score");
-    let score = 0;
+  const gameArea = document.getElementById("gameArea");
+  const scoreDisplay = document.getElementById("score");
+  let score = 0;
 
-    // Just image URLs (no <a> or <img> tags)
-    const villains = [
-      "https://i.ibb.co/zWx7m94g/otto-octavius-doctor-octopus-nwh-png-by-iwasboredsoididthis-deprn31-pre.png",
-      "https://i.ibb.co/4RG9Y0Rj/spider-man-4-lizard-transparent-by-bearbro123-dfc64oa-fullview.png", // Lizard
-      "https://i.ibb.co/prZyh50r/spider-man-green-goblin-png-willem-dafoe-by-vegpngs-df0zxa5-pre.png", // Green Goblin
-    "https://i.ibb.co/xSfSCymz/Venom-5.png"    ];
+  const villains = [
+    "https://i.ibb.co/zWx7m94g/otto-octavius-doctor-octopus-nwh-png-by-iwasboredsoididthis-deprn31-pre.png",
+    "https://i.ibb.co/4RG9Y0Rj/spider-man-4-lizard-transparent-by-bearbro123-dfc64oa-fullview.png",
+    "https://i.ibb.co/prZyh50r/spider-man-green-goblin-png-willem-dafoe-by-vegpngs-df0zxa5-pre.png",
+    "https://i.ibb.co/xSfSCymz/Venom-5.png"
+  ];
 
-    function spawnVillain() {
-      const villain = document.createElement("img");
-      villain.className = "villain";
-      villain.src = villains[Math.floor(Math.random() * villains.length)];
-      villain.style.top = Math.random() * (gameArea.clientHeight - 70) + "px";
-      villain.style.left = Math.random() * (gameArea.clientWidth - 70) + "px";
+  function spawnVillain() {
+    const villain = document.createElement("img");
+    villain.className = "villain";
+    villain.src = villains[Math.floor(Math.random() * villains.length)];
+    villain.style.top = Math.random() * (gameArea.clientHeight - 70) + "px";
+    villain.style.left = Math.random() * (gameArea.clientWidth - 70) + "px";
 
-      villain.onclick = () => {
-        score++;
-        scoreDisplay.textContent = "Score: " + score;
-        villain.remove();
-      };
+    villain.onclick = () => {
+      score++;
+      scoreDisplay.textContent = "Score: " + score;
+      villain.remove();
+    };
 
-      gameArea.appendChild(villain);
-      setTimeout(() => villain.remove(), 1500);
-    }
+    gameArea.appendChild(villain);
+    setTimeout(() => villain.remove(), 1500);
+  }
 
-    setInterval(spawnVillain, 2000);
-  </script>
+  // -------- SPEED INCREASE FEATURE --------
+  let spawnInterval = 2000; // starting speed (2 sec)
+  let intervalId;
+
+  function startGame() {
+    intervalId = setInterval(spawnVillain, spawnInterval);
+
+    // Every 10 seconds, increase speed
+    setInterval(() => {
+      if (spawnInterval > 500) { // min limit: 0.5 sec
+        spawnInterval -= 200; // speed up by 200ms
+        clearInterval(intervalId);
+        intervalId = setInterval(spawnVillain, spawnInterval);
+      }
+    }, 10000); // every 10 sec
+  }
+  startGame();
+</script>
 </body>
 </html>
