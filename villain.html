@@ -12,25 +12,20 @@
         repeating-linear-gradient(to right, #2d2a44 0 1px, transparent 2px 200px),
         repeating-linear-gradient(to bottom, #2d2a44 0 1px, transparent 2px 200px),
         radial-gradient(at 50% 50%, #2d2a44, #1d1b34);
-   
       color: white;
       margin: 0;
       padding: 0;
     }
 
-   header h1 {
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  margin: 10px;
-  background: linear-gradient(90deg, #395ca0, #d78995, #efefea);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-transform: uppercase;
-}
-
-    p {
-      font-size: 18px;
+    header h1 {
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin: 10px;
+      background: linear-gradient(90deg, #395ca0, #d78995, #efefea);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
     }
 
     #gameArea {
@@ -46,24 +41,25 @@
     }
 
     .villain {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  cursor: pointer;
-  border-radius: 0; /* remove circle look */
-  background-color: transparent !important; /* ensures no white fill */
-}
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      cursor: pointer;
+      border-radius: 0;
+      background-color: transparent !important;
+    }
 
     .villain:hover {
       transform: scale(1.2) rotate(5deg);
     }
 
-    #score {
+    #score, #timer, #remark {
       font-size: 22px;
       margin: 15px;
+      font-family: 'Poppins';
       font-weight: bold;
     }
 
@@ -86,59 +82,147 @@
 </head>
 <body>
   <header>
-  <h1>Catch the Super Villain 🦹‍♂️</h1>
+    <h1>Catch the Super Villain 🦹‍♂️</h1>
   </header>
   <p>Click on the villain as fast as you can!</p>
   <div id="gameArea"></div>
   <p id="score">Score: 0</p>
+  <p id="timer">Time: 90s</p>
+  <p id="remark"></p>
   <button onclick="location.href='index.html'">⬅ Back</button>
 
   <script>
-  const gameArea = document.getElementById("gameArea");
-  const scoreDisplay = document.getElementById("score");
-  let score = 0;
+    const gameArea = document.getElementById("gameArea");
+    const scoreDisplay = document.getElementById("score");
+    const timerDisplay = document.getElementById("timer");
+    const remarkDisplay = document.getElementById("remark");
 
-  const villains = [
-    "https://i.ibb.co/zWx7m94g/otto-octavius-doctor-octopus-nwh-png-by-iwasboredsoididthis-deprn31-pre.png",
-    "https://i.ibb.co/4RG9Y0Rj/spider-man-4-lizard-transparent-by-bearbro123-dfc64oa-fullview.png",
-    "https://i.ibb.co/prZyh50r/spider-man-green-goblin-png-willem-dafoe-by-vegpngs-df0zxa5-pre.png",
-    "https://i.ibb.co/xSfSCymz/Venom-5.png"
-  ];
+    let score = 0;
+    let gameOver = false;
+    let timeLeft = 90; // 1.5 minutes
 
-  function spawnVillain() {
-    const villain = document.createElement("img");
-    villain.className = "villain";
-    villain.src = villains[Math.floor(Math.random() * villains.length)];
-    villain.style.top = Math.random() * (gameArea.clientHeight - 70) + "px";
-    villain.style.left = Math.random() * (gameArea.clientWidth - 70) + "px";
+    const villains = [
+      "https://i.ibb.co/zWx7m94g/otto-octavius-doctor-octopus-nwh-png-by-iwasboredsoididthis-deprn31-pre.png",
+      "https://i.ibb.co/4RG9Y0Rj/spider-man-4-lizard-transparent-by-bearbro123-dfc64oa-fullview.png",
+      "https://i.ibb.co/prZyh50r/spider-man-green-goblin-png-willem-dafoe-by-vegpngs-df0zxa5-pre.png",
+      "https://i.ibb.co/xSfSCymz/Venom-5.png"
+    ];
 
-    villain.onclick = () => {
-      score++;
-      scoreDisplay.textContent = "Score: " + score;
-      villain.remove();
+    const catchRemarks = [
+      "Gotcha! Villain down 👊",
+      "One less bad guy on the streets 💥",
+      "Spider-Man would be proud 🕷️",
+      "Boom! Evil neutralized ⚡",
+      "Score +1, Ego +100 😎"
+    ];
+
+    const missRemarks = [
+      "Villain slipped away… again 🏃‍♂️💨",
+      "Too slow! Need more Spidey reflexes 🕸️",
+      "Oops! City’s in danger now 🚨",
+      "That villain just ghosted you 👻"
+    ];
+
+    const milestoneRemarks = {
+      5: "Rookie vigilante in the making 👶🦸",
+      10: "Neighborhood hero vibes 💪",
+      20: "Now you’re basically an Avenger 🛡️",
+      50: "Legend status unlocked 🔥"
     };
 
-    gameArea.appendChild(villain);
-    setTimeout(() => villain.remove(), 1500);
-  }
+    function showRemark(text) {
+      remarkDisplay.textContent = text;
+      setTimeout(() => {
+        remarkDisplay.textContent = "";
+      }, 1500);
+    }
 
-  // -------- SPEED INCREASE FEATURE --------
-  let spawnInterval = 2000; // starting speed (2 sec)
-  let intervalId;
+    function spawnVillain() {
+      if (gameOver) return;
 
-  function startGame() {
-    intervalId = setInterval(spawnVillain, spawnInterval);
+      const villain = document.createElement("img");
+      villain.className = "villain";
+      villain.src = villains[Math.floor(Math.random() * villains.length)];
+      villain.style.top = Math.random() * (gameArea.clientHeight - 70) + "px";
+      villain.style.left = Math.random() * (gameArea.clientWidth - 70) + "px";
 
-    // Every 10 seconds, increase speed
-    setInterval(() => {
-      if (spawnInterval > 500) { // min limit: 0.5 sec
-        spawnInterval -= 200; // speed up by 200ms
-        clearInterval(intervalId);
-        intervalId = setInterval(spawnVillain, spawnInterval);
-      }
-    }, 10000); // every 10 sec
-  }
-  startGame();
-</script>
+      villain.onclick = () => {
+        if (gameOver) return;
+        score++;
+        scoreDisplay.textContent = "Score: " + score;
+        showRemark(catchRemarks[Math.floor(Math.random() * catchRemarks.length)]);
+        if (milestoneRemarks[score]) showRemark(milestoneRemarks[score]);
+        villain.remove();
+      };
+
+      gameArea.appendChild(villain);
+      setTimeout(() => {
+        if (!gameOver && gameArea.contains(villain)) {
+          showRemark(missRemarks[Math.floor(Math.random() * missRemarks.length)]);
+          villain.remove();
+        }
+      }, 1500);
+    }
+
+    // Faster spawn so 50+ is achievable
+    let spawnInterval = 2000; // start at 2 sec
+    let intervalId;
+
+    function startGame() {
+      intervalId = setInterval(spawnVillain, spawnInterval);
+
+      // Speed up every 8s by 200ms until 500ms
+      setInterval(() => {
+        if (!gameOver && spawnInterval > 500) {
+          spawnInterval -= 200;
+          clearInterval(intervalId);
+          intervalId = setInterval(spawnVillain, spawnInterval);
+        }
+      }, 8000);
+
+      // Timer countdown for 90s
+      const countdown = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          timerDisplay.textContent = "Time: " + timeLeft + "s";
+        } else {
+          clearInterval(countdown);
+          clearInterval(intervalId);
+          gameOver = true;
+
+          // Final witty remark by performance
+          let finalRemark = "";
+          if (score <= 5) finalRemark = "The villains had a party while you were daydreaming 😅";
+          else if (score <= 15) finalRemark = "Not bad, rookie vigilante 👶🦸";
+          else if (score <= 30) finalRemark = "Neighborhood hero material 💪";
+          else if (score <= 50) finalRemark = "Avengers might call you soon 🛡️";
+          else if (score <= 70) finalRemark = "Legend! Even Spider-Man is jealous 🔥";
+          else finalRemark = "My city now. You’re unstoppable 🏆";
+
+          // Centered Game Over screen
+          gameArea.innerHTML = `
+            <div style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              height: 100%;
+              text-align: center;
+            ">
+              <h2 style="color:yellow; font-size:40px; margin:10px;">
+                Game Over! 🎮<br>
+                Your Final Score: ${score}
+              </h2>
+              <p style="color:#ffcc00; font-size:30px; margin:5px;">
+                ${finalRemark}
+              </p>
+            </div>
+          `;
+        }
+      }, 1000);
+    }
+
+    startGame();
+  </script>
 </body>
 </html>
