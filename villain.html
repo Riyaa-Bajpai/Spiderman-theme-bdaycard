@@ -195,9 +195,9 @@
           if (score <= 5) finalRemark = "The villains had a party while you were daydreaming 😅";
           else if (score <= 15) finalRemark = "Not bad, rookie vigilante 👶🦸";
           else if (score <= 30) finalRemark = "Neighborhood hero material 💪";
-          else if (score <= 50) finalRemark = "Avengers might call you soon 🛡️";
-          else if (score <= 70) finalRemark = "Legend! Even Spider-Man is jealous 🔥";
-          else finalRemark = "My city now. You’re unstoppable 🏆";
+          else if (score <= 40) finalRemark = "Avengers might call you soon 🛡️";
+          else if (score <= 50) finalRemark = "Legend! Even Spider-Man is jealous 🔥";
+          else finalRemark = "Your city now. You are unstoppable 🏆";
 
           // Centered Game Over screen
           gameArea.innerHTML = `
@@ -213,9 +213,9 @@
                 Game Over! 🎮<br>
                 Your Final Score: ${score}
               </h2>
-              <p style="color:#ffcc00; font-size:30px; margin:5px;">
+              <h3 style="color:yellow; font-size:30px; margin:10px;">
                 ${finalRemark}
-              </p>
+              </h3>
             </div>
           `;
         }
